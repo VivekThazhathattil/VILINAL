@@ -1,24 +1,31 @@
 #ifndef __MATRIX_H_
 #define __MATRIX_H_
-    #include <stdio.h>
-    #include <math.h>
-    #include <stdlib.h>
-    #include "../include/utils.h"
+#include "../include/utils.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-    typedef struct{
-        uint m, n;
-        double **M;
-    } matrix_t;
+typedef struct {
+  uint m, n;
+  double **M;
+} matrix_t;
 
-    matrix_t* zeros(const uint, const uint);
-    void destroyMatrix(matrix_t* );
-    void freePartiallyFilledMatrix(matrix_t*, uint);
-    matrix_t* transpose(matrix_t*);
-    matrix_t* makeMatrixFrom2DArray(const double*, const uint, const uint);
+matrix_t *zeros(const uint, const uint);
+void destroyMatrix(matrix_t *);
+void freePartiallyFilledMatrix(matrix_t *, uint);
+matrix_t *transpose(matrix_t *);
+matrix_t *makeMatrixFrom2DArray(const double *, const uint, const uint);
 
-    matrix_t* columnVector(const matrix_t* inputMatrix, const uint columnNo);
-    matrix_t* rowVector(const matrix_t* inputMatrix, const uint rowNo);
+matrix_t *columnVector(const matrix_t *inputMatrix, const uint columnNo);
+matrix_t *rowVector(const matrix_t *inputMatrix, const uint rowNo);
 
-    matrix_t *product(const matrix_t *, const matrix_t *);
-    matrix_t *partial_product(const matrix_t *, const matrix_t *, const uint, const uint);
+matrix_t *product(const matrix_t *, const matrix_t *);
+matrix_t *partial_product(const matrix_t *, const matrix_t *, const uint,
+                          const uint);
+
+double two_norm(matrix_t *, uint);
+
+void resetToZero(matrix_t *);
+void setElementsToOneValue(matrix_t *, double);
+void scalarMultiplyMatrix(matrix_t *, double, uint);
 #endif
