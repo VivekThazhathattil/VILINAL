@@ -166,3 +166,86 @@ void scalarMultiplyMatrix(matrix_t *q, double scalar, uint col) {
   }
   return;
 }
+
+matrix_t *create_random(const uint m, const uint n) {
+  matrix_t *mat = zeros(m, n);
+  for (uint i = 0; i < m; ++i) {
+    for (uint j = 0; j < n; ++j) {
+        mat->M[i][j] = (10.0 * rand()) / RAND_MAX;
+    }
+  }
+  return mat;
+}
+
+matrix_t *pseudoInverse(matrix_t *A) {
+  /* formula: pseudoInv(A) = (A^T * A)^(-1) * A^T */
+  matrix_t *mat, *AT, *prod, *inv;
+  AT = transpose(A);
+  prod = product(AT, A);
+  inv = inverse(prod);
+  mat = product(inv, A);
+
+  destroyMatrix(AT);
+  destroyMatrix(prod);
+  destroyMatrix(inv);
+  return mat;
+}
+
+double determinant(matrix_t *A) {
+  uint rowSize = A->m;
+  uint columnSize = A->n;
+
+  if (rowSize != columnSize) {
+    printf("Error: determinant(): Dimension mismatch. Operation Not Permitted. "
+           "Exiting... \n");
+    exit(1);
+  } else if (rowSize == 1)
+    return (A->M[0][0]);
+  else if (rowSize == 2)
+    return (A->M[0][0] * A->M[1][1] - A->M[1][0] * A->M[0][1]);
+  else {
+    matrix_t *minor = zeros(rowSize - 1, columnSize - 1);
+    uint rowMinor, columnMinor;
+    uint firstRowColumnIndex;
+    double sum = 0;
+    register uint row, column;
+    // exclude first row and current column
+    for (firstRowColumnIndex = 0; firstRowColumnIndex < rowSize;
+         firstRowColumnIndex++) {
+      rowMinor = 0;
+      for (row = 1; row < rowSize; row++) {
+        columnMinor = 0;
+        for (column = 0; column < columnSize; column++) {
+          if (column == firstRowColumnIndex)
+            continue;
+          else
+            minor->M[rowMinor][columnMinor] = A->M[row][column];
+          columnMinor++;
+        }
+        rowMinor++;
+      }
+      if (firstRowColumnIndex % 2 == 0)
+        sum += A->M[0][firstRowColumnIndex] * determinant(minor);
+      else
+        sum -= A->M[0][firstRowColumnIndex] * determinant(minor);
+    }
+    destroyMatrix(minor);
+    return sum;
+  }
+}
+
+matrix_t *inverse(matrix_t *A) {
+  if (A->m != A->n) {
+    printf(
+        "Error: inverse(): Given matrix isn't a square matrix. Exiting....\n");
+    exit(1);
+  }
+  double det = determinant(A);
+  if (det == 0) {
+    printf("Exception: inverse(): Zero determinant. Matrix is singular. "
+           "Exiting....\n");
+    exit(1);
+  }
+  matrix_t *mat = zeros(A->n, A->m);
+  return mat;
+}

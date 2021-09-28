@@ -5,7 +5,7 @@ static void updateQR(matrix_t *, matrix_t *, matrix_t *, uint);
 static void sumQRColumn(matrix_t *, matrix_t *, matrix_t *, matrix_t *, uint);
 static double dotEm(matrix_t *, uint, matrix_t *, uint);
 
-qr_t* initializeQR(const uint m, const uint n) {
+qr_t *initializeQR(const uint m, const uint n) {
   qr_t *qr = (qr_t *)malloc(sizeof(qr_t));
   qr->q = zeros(m, n);
   qr->r = zeros(n, n);

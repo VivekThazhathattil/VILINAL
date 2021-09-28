@@ -8,7 +8,7 @@ typedef struct {
   matrix_t *r;
 } qr_t;
 
-qr_t* initializeQR(const uint, const uint);
+qr_t *initializeQR(const uint, const uint);
 qr_t *computeQR(matrix_t *);
 matrix_t **arrayOfColumnsOfMatrix(matrix_t *);
 void destroyColumnVectorArray(matrix_t **, uint);

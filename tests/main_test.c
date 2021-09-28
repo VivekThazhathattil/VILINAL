@@ -1,13 +1,17 @@
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 #include "../include/matrix.h"
 #include "../include/qr.h"
 #include "../include/utils.h"
-#include <assert.h>
-#include <stdio.h>
 
 void printMatrix(matrix_t *, char *msg);
 void matrix_test(void);
 
 int main() {
+  srand(time(0));
   matrix_test();
   return 0;
 }
@@ -52,14 +56,30 @@ void matrix_test() {
 
   qr_t *qr = computeQR(B);
   printMatrix(qr->q, "Test #6a: QR factorization computeQR(B) -> q");
-  printMatrix(qr->r, "Test #6a: QR factorization computeQR(B) -> r");
+  printMatrix(qr->r, "Test #6b: QR factorization computeQR(B) -> r");
+
+  matrix_t *D = product(qr->q, qr->r);
+  printMatrix(D, "Test #6c: product(q,r): Checking if B = q x r");
+
+  matrix_t *E = create_random(5, 5);
+  qr_t *qr2 = computeQR(E);
+  printMatrix(qr2->q, "Test #7a: QR factorization computeQR(E) -> q");
+  printMatrix(qr2->r, "Test #7b: QR factorization computeQR(E) -> r");
+  matrix_t *F = product(qr2->q, qr2->r);
+  printMatrix(E, "Test #7c: Original matrix E");
+  printMatrix(F, "Test #7d: product(q,r): Checking if E = F = q x r");
+  printf("Determinant of E = %lf", determinant(E));
 
   destroyMatrix(A);
   destroyMatrix(B);
   destroyMatrix(B_transpose);
   destroyMatrix(C);
+  destroyMatrix(D);
+  destroyMatrix(E);
+  destroyMatrix(F);
   destroyMatrix(column_1_A);
   destroyMatrix(row_1_A);
   destroyQR(qr);
+  destroyQR(qr2);
   return;
 }

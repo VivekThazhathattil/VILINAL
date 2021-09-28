@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct {
   uint m, n;
@@ -28,4 +29,8 @@ double two_norm(matrix_t *, uint);
 void resetToZero(matrix_t *);
 void setElementsToOneValue(matrix_t *, double);
 void scalarMultiplyMatrix(matrix_t *, double, uint);
+matrix_t *create_random(const uint, const uint);
+double determinant(matrix_t *);
+matrix_t *inverse(matrix_t *);
+matrix_t *pseudoInverse(matrix_t *);
 #endif
