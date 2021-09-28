@@ -105,9 +105,13 @@ matrix_t *product(const matrix_t *A, const matrix_t *B){
         printf("Cannot multiply the given matrices. A(%d,%d) & B(%d,%d).\n", A->m, A->n, B->m, B->n);
         return NULL;
     }
-    matrix_t *prod = zeros(A->m, B->n);
-    for(uint i = 0; i < A->m; ++i){
-        for(uint j = 0; j < B->n; ++j){
+    return partial_product(A, B, A->m, B->n);
+}
+
+matrix_t *partial_product(const matrix_t *A, const matrix_t *B, const uint partialI, const uint partialJ){
+    matrix_t *prod = zeros(partialI, partialJ);
+    for(uint i = 0; i < partialI; ++i){
+        for(uint j = 0; j < partialJ; ++j){
             prod->M[i][j] = 0;
             for(uint k = 0; k < A->n; ++k){
                 prod->M[i][j] += A->M[i][k] * B->M[k][j];

@@ -20,4 +20,5 @@
     matrix_t* rowVector(const matrix_t* inputMatrix, const uint rowNo);
 
     matrix_t *product(const matrix_t *, const matrix_t *);
+    matrix_t *partial_product(const matrix_t *, const matrix_t *, const uint, const uint);
 #endif
