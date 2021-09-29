@@ -157,12 +157,20 @@ void setElementsToOneValue(matrix_t *A, double val) {
   return;
 }
 
-void scalarMultiplyMatrix(matrix_t *q, double scalar, uint col) {
+void scalarMultiplyMatrix(matrix_t *q, double scalar, int col) {
   if (q->n == 1) {
     col = 0;
   }
-  for (uint i = 0; i < q->m; ++i) {
-    q->M[i][col] = q->M[i][col] * scalar;
+  if (col != -1) {
+    for (uint i = 0; i < q->m; ++i) {
+      q->M[i][col] = q->M[i][col] * scalar;
+    }
+  } else {
+    for (uint i = 0; i < q->m; ++i) {
+      for (uint j = 0; j < q->n; ++j) {
+        q->M[i][j] = q->M[i][j] * scalar;
+      }
+    }
   }
   return;
 }
@@ -171,7 +179,7 @@ matrix_t *create_random(const uint m, const uint n) {
   matrix_t *mat = zeros(m, n);
   for (uint i = 0; i < m; ++i) {
     for (uint j = 0; j < n; ++j) {
-        mat->M[i][j] = (10.0 * rand()) / RAND_MAX;
+      mat->M[i][j] = (10.0 * rand()) / RAND_MAX;
     }
   }
   return mat;
@@ -183,7 +191,7 @@ matrix_t *pseudoInverse(matrix_t *A) {
   AT = transpose(A);
   prod = product(AT, A);
   inv = inverse(prod);
-  mat = product(inv, A);
+  mat = product(inv, AT);
 
   destroyMatrix(AT);
   destroyMatrix(prod);
@@ -191,7 +199,7 @@ matrix_t *pseudoInverse(matrix_t *A) {
   return mat;
 }
 
-double determinant(matrix_t *A) {
+double determinant(const matrix_t *A) {
   uint rowSize = A->m;
   uint columnSize = A->n;
 
@@ -234,18 +242,56 @@ double determinant(matrix_t *A) {
   }
 }
 
-matrix_t *inverse(matrix_t *A) {
+matrix_t *inverse(const matrix_t *A) {
   if (A->m != A->n) {
     printf(
         "Error: inverse(): Given matrix isn't a square matrix. Exiting....\n");
     exit(1);
   }
+
+  if (A->m < 1) {
+    printf("Error: Matrix size cannot be less than 1. Exiting... \n");
+    exit(1);
+  }
+
   double det = determinant(A);
   if (det == 0) {
     printf("Exception: inverse(): Zero determinant. Matrix is singular. "
            "Exiting....\n");
     exit(1);
   }
-  matrix_t *mat = zeros(A->n, A->m);
-  return mat;
+
+  matrix_t *coeffs, *coefMat;
+  coefMat = zeros(A->m, A->n);
+  if (A->m == 1) {
+    coefMat->M[0][0] = (1.0 / pow(det, 2)) * A->M[0][0];
+    return coefMat;
+  }
+  coeffs = zeros(A->m - 1, A->n - 1);
+
+  uint m, n;
+  for (uint i = 0; i < A->m; ++i) {
+    for (uint j = 0; j < A->n; ++j) {
+      m = 0;
+      n = 0;
+      for (uint ii = 0; ii < A->m; ++ii) {
+        if (ii != i) {
+          for (uint jj = 0; jj < A->n; ++jj) {
+            if (jj != j) {
+              coeffs->M[m][n] = A->M[ii][jj];
+              ++n;
+            }
+          }
+          ++m;
+          n = 0;
+        }
+      }
+      coefMat->M[i][j] = pow(-1, i + j) * determinant(coeffs);
+    }
+  }
+  matrix_t *trans_coef = transpose(coefMat);
+  scalarMultiplyMatrix(trans_coef, 1.0 / det, -1);
+  destroyMatrix(coefMat);
+  destroyMatrix(coeffs);
+  return trans_coef;
 }

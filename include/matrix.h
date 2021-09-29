@@ -28,9 +28,9 @@ double two_norm(matrix_t *, uint);
 
 void resetToZero(matrix_t *);
 void setElementsToOneValue(matrix_t *, double);
-void scalarMultiplyMatrix(matrix_t *, double, uint);
+void scalarMultiplyMatrix(matrix_t *, double, int);
 matrix_t *create_random(const uint, const uint);
-double determinant(matrix_t *);
-matrix_t *inverse(matrix_t *);
+double determinant(const matrix_t *);
+matrix_t *inverse(const matrix_t *);
 matrix_t *pseudoInverse(matrix_t *);
 #endif

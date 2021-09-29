@@ -68,7 +68,13 @@ void matrix_test() {
   matrix_t *F = product(qr2->q, qr2->r);
   printMatrix(E, "Test #7c: Original matrix E");
   printMatrix(F, "Test #7d: product(q,r): Checking if E = F = q x r");
-  printf("Determinant of E = %lf", determinant(E));
+  printf("Determinant of E = %lf\n\n", determinant(E));
+  matrix_t *E_inv = inverse(E);
+  printMatrix(E_inv, "Test #8a: inverse(E) -> E^(-1)");
+  matrix_t *G = pseudoInverse(E);
+  printMatrix(
+      G,
+      "Test #8b: pseudoInverse(E) -> should equal (E^T E)^(-1) * E^T = E^(-1)");
 
   destroyMatrix(A);
   destroyMatrix(B);
@@ -76,7 +82,9 @@ void matrix_test() {
   destroyMatrix(C);
   destroyMatrix(D);
   destroyMatrix(E);
+  destroyMatrix(E_inv);
   destroyMatrix(F);
+  destroyMatrix(G);
   destroyMatrix(column_1_A);
   destroyMatrix(row_1_A);
   destroyQR(qr);
