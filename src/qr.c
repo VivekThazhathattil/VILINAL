@@ -96,3 +96,25 @@ static double dotEm(matrix_t *q, uint qIdx, matrix_t *a, uint aIdx) {
   }
   return dotSum;
 }
+
+matrix_t *leastSquares(matrix_t *A, matrix_t *b) {
+  if (A->m != b->m || b->n != 1 || A->m < 1 || A->n < 1 || b->m < 1) {
+    printf("Error: leastSquares(): Matrix order mismatch. Exiting... \n");
+    exit(1);
+  }
+  /* To obtain least squares, qr factorization is done and then the formula: x^
+   * = R^(-1)Q^(T)b is used */
+  matrix_t *x, *invR, *transQ, *prod1;
+  qr_t *qr = computeQR(A);
+  invR = inverse(qr->r);
+  transQ = transpose(qr->q);
+  prod1 = product(invR, transQ);
+  x = product(prod1, b);
+
+  destroyMatrix(invR);
+  destroyMatrix(transQ);
+  destroyMatrix(prod1);
+  destroyQR(qr);
+
+  return x;
+}

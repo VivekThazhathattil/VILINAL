@@ -1,10 +1,12 @@
 #ifndef __MATRIX_H_
 #define __MATRIX_H_
-#include "../include/utils.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+#include "../include/mem.h"
+#include "../include/utils.h"
 
 typedef struct {
   uint m, n;

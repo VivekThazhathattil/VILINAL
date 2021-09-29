@@ -4,16 +4,39 @@
 #include <time.h>
 
 #include "../include/matrix.h"
+#include "../include/mem.h"
 #include "../include/qr.h"
 #include "../include/utils.h"
 
 void printMatrix(matrix_t *, char *msg);
 void matrix_test(void);
+void leastSquares_test(void);
 
 int main() {
   srand(time(0));
   matrix_test();
+  leastSquares_test();
   return 0;
+}
+
+void leastSquares_test(void) {
+  matrix_t *A, *B, *x;
+  double a[][2] = {{3, -6}, {4, -8}, {0, 1}};
+  double b[][1] = {{-1}, {7}, {2}};
+
+  A = makeMatrixFrom2DArray((double *)a, 3, 2);
+  B = makeMatrixFrom2DArray((double *)b, 3, 1);
+  x = leastSquares(A, B);
+
+  printMatrix(A, "Test: leastSquares() -> A: Ax = B");
+  printMatrix(B, "Test: leastSquares() -> B: Ax = B");
+  printMatrix(x, "Test: leastSquares() -> Result: x: Ax = B");
+
+  destroyMatrix(A);
+  destroyMatrix(B);
+  destroyMatrix(x);
+
+  return;
 }
 
 void printMatrix(matrix_t *mat, char *msg) {
@@ -33,7 +56,7 @@ void printMatrix(matrix_t *mat, char *msg) {
   return;
 }
 
-void matrix_test() {
+void matrix_test(void) {
   double a[][5] = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}};
   double b[][3] = {{-1, 35, 1}, {0, 3, 3}, {-3, 0, 2}, {1, 1, 1}, {2, 2, 2}};
   matrix_t *A = makeMatrixFrom2DArray((double *)a, 2, 5);

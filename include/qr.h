@@ -2,6 +2,7 @@
 #define __QR_H__
 
 #include "../include/matrix.h"
+#include "../include/mem.h"
 
 typedef struct {
   matrix_t *q;
@@ -13,5 +14,6 @@ qr_t *computeQR(matrix_t *);
 matrix_t **arrayOfColumnsOfMatrix(matrix_t *);
 void destroyColumnVectorArray(matrix_t **, uint);
 void destroyQR(qr_t *);
+matrix_t *leastSquares(matrix_t *, matrix_t *);
 
 #endif

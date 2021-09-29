@@ -21,6 +21,7 @@ build:
 clean:
 	rm -f $(PROG_NAME)
 	rm -rf $(OBJ_DIR)
+	rm -f *.mem
 
 format:
 	clang-format -i */*.h */*.c
