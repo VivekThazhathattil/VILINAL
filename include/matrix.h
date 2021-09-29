@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../include/mem.h" // use ony for debug
 #include "../include/utils.h"
 
 typedef struct {

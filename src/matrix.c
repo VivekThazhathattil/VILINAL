@@ -296,28 +296,28 @@ matrix_t *inverse(const matrix_t *A) {
   return trans_coef;
 }
 
-matrix_t *linearCombination(matrix_t *A, matrix_t *B, double alpha, double beta){
-    if(A->m != B->m || A->n != B->n){
-        printf("Matrix order mismatch. Exiting...\n");
-        exit(1);
+matrix_t *linearCombination(matrix_t *A, matrix_t *B, double alpha,
+                            double beta) {
+  if (A->m != B->m || A->n != B->n) {
+    printf("Matrix order mismatch. Exiting...\n");
+    exit(1);
+  } else if (A->m < 1 || A->n < 1) {
+    printf("Matrix order cannot be less than 1. Exiting... \n");
+    exit(1);
+  }
+  matrix_t *mat = zeros(A->m, A->n);
+  for (uint i = 0; i < A->m; ++i) {
+    for (uint j = 0; j < A->n; ++j) {
+      mat->M[i][j] = alpha * A->M[i][j] + beta * B->M[i][j];
     }
-    else if(A->m < 1 || A->n < 1){
-        printf("Matrix order cannot be less than 1. Exiting... \n");
-        exit(1);
-    }
-    matrix_t *mat = zeros(A->m, A->n);
-    for(uint i = 0; i < A->m; ++i){
-        for(uint j = 0; j < A->n; ++j){
-            mat->M[i][j] = alpha * A->M[i][j] + beta * B->M[i][j];
-        }
-    }
-    return mat;
+  }
+  return mat;
 }
 
-matrix_t *subtract(matrix_t *A, matrix_t *B){
-    return linearCombination(A, B, 1, -1);
+matrix_t *subtract(matrix_t *A, matrix_t *B) {
+  return linearCombination(A, B, 1, -1);
 }
 
-matrix_t *add(matrix_t *A, matrix_t *B){
-    return linearCombination(A, B, 1, 1);
+matrix_t *add(matrix_t *A, matrix_t *B) {
+  return linearCombination(A, B, 1, 1);
 }
