@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../include/mem.h"
+#include "../include/mem.h" // use ony for debug
 #include "../include/utils.h"
 
 typedef struct {
@@ -25,6 +25,9 @@ matrix_t *rowVector(const matrix_t *inputMatrix, const uint rowNo);
 matrix_t *product(const matrix_t *, const matrix_t *);
 matrix_t *partial_product(const matrix_t *, const matrix_t *, const uint,
                           const uint);
+matrix_t *add(matrix_t *, matrix_t *);
+matrix_t *subtract(matrix_t *, matrix_t *);
+matrix_t *linearCombination(matrix_t *, matrix_t *, double, double);
 
 double two_norm(matrix_t *, uint);
 

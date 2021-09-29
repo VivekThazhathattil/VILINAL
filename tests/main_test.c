@@ -83,6 +83,11 @@ void matrix_test(void) {
 
   matrix_t *D = product(qr->q, qr->r);
   printMatrix(D, "Test #6c: product(q,r): Checking if B = q x r");
+  matrix_t *q_trans = transpose(qr->q);
+  matrix_t *q_prod1 = product(qr->q, q_trans);
+  matrix_t *q_prod2 = product(q_trans, qr->q);
+  printMatrix(q_prod1, "Test #6d: product(q, q^T): Checking for Identity matrix (will satisfy only for symmetric cases");
+  printMatrix(q_prod2, "Test #6e: product(q^T, q): Checking for Identity matrix");
 
   matrix_t *E = create_random(5, 5);
   qr_t *qr2 = computeQR(E);
@@ -112,5 +117,8 @@ void matrix_test(void) {
   destroyMatrix(row_1_A);
   destroyQR(qr);
   destroyQR(qr2);
+  destroyMatrix(q_trans);
+  destroyMatrix(q_prod1);
+  destroyMatrix(q_prod2);
   return;
 }

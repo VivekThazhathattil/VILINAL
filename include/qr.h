@@ -2,7 +2,7 @@
 #define __QR_H__
 
 #include "../include/matrix.h"
-#include "../include/mem.h"
+#include "../include/mem.h" // use ony for debug
 
 typedef struct {
   matrix_t *q;
