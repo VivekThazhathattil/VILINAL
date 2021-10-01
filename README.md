@@ -6,3 +6,4 @@ To check it out, clone the repo, navigate to the repo, run `make` to build the t
 * Common matrix operations
 * QR factorization
 * Least Squares
+* LU decomposition (TODO: partial pivoting)

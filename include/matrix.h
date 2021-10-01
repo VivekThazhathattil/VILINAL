@@ -37,4 +37,7 @@ matrix_t *create_random(const uint, const uint);
 double determinant(const matrix_t *);
 matrix_t *inverse(const matrix_t *);
 matrix_t *pseudoInverse(matrix_t *);
+matrix_t *createIdentityMatrix(const uint);
+matrix_t *copyMatrix(const matrix_t *);
+
 #endif

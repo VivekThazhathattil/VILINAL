@@ -321,3 +321,29 @@ matrix_t *subtract(matrix_t *A, matrix_t *B) {
 matrix_t *add(matrix_t *A, matrix_t *B) {
   return linearCombination(A, B, 1, 1);
 }
+
+matrix_t *createIdentityMatrix(const uint m){
+  if(m < 1){
+    printf("Error: createIdentityMatrix(): Matrix size cannot be less than 1. Exiting..");
+    exit(1);
+  }
+  matrix_t *mat = zeros(m, m);
+  for(uint i = 0; i < m; ++i){
+    mat->M[i][i] = 1;
+  }
+  return mat;
+}
+
+matrix_t *copyMatrix(const matrix_t *mat){
+  if(mat->m < 1 || mat->n < 1){
+    printf("Error: copyMatrix(): Matrix size cannot be less than 1. Exiting..");
+    exit(1);
+  }
+  matrix_t *newMat = zeros(mat->m, mat->n);
+  for(uint i = 0; i < mat->m; ++i){
+    for(uint j = 0; j < mat->n; ++j){
+      newMat->M[i][j] = mat->M[i][j];
+    }
+  }
+  return newMat;
+}

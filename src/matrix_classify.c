@@ -62,3 +62,17 @@ uint isIdentityMatrix(matrix_t *mat) {
   }
   return 1;
 }
+
+uint compareMatrices(matrix_t *mat1, matrix_t *mat2){
+  if(mat1->m != mat2->m || mat1->n != mat2->n){
+    return 0;
+  }
+  for (uint i = 0; i < mat1->m; ++i) {
+    for (uint j = 0; j < mat2->n; ++j) {
+        if (mat1->M[i][j] != mat2->M[i][j]) {
+          return 0;
+        }
+    }
+  }
+  return 1;
+}

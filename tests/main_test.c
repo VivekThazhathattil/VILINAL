@@ -6,17 +6,20 @@
 #include "../include/matrix.h"
 #include "../include/matrix_classify.h"
 #include "../include/qr.h"
+#include "../include/lu.h"
 #include "../include/utils.h"
 
 void printMatrix(matrix_t *, char *msg);
 void matrix_test(void);
 void leastSquares_test(void);
 void matrix_classify_test(void);
+void computeLU_test(void);
 
 int main() {
   srand(time(0));
   matrix_test();
   leastSquares_test();
+  computeLU_test();
   matrix_classify_test();
   return 0;
 }
@@ -128,14 +131,13 @@ void matrix_test(void) {
 }
 
 void matrix_classify_test(void) {
-  double i[][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
   double d[][3] = {{3, 0, 0}, {0, 11, 0}, {0, 0, 13}};
   double s[][4] = {{5, 0, 0, 1}, {0, 1, 0, 2}, {0, 0, 13, 5}};
   double z[][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
   matrix_t *I, *D, *S, *Z;
 
-  I = makeMatrixFrom2DArray((double *)i, 3, 3);
+  I = createIdentityMatrix(5);
   D = makeMatrixFrom2DArray((double *)d, 3, 3);
   Z = makeMatrixFrom2DArray((double *)z, 3, 3);
   S = makeMatrixFrom2DArray((double *)s, 3, 4);
@@ -174,5 +176,22 @@ void matrix_classify_test(void) {
   destroyMatrix(S);
   destroyMatrix(Z);
 
+  return;
+}
+
+void computeLU_test(void){
+  double a[][4] = {
+      {1, 3, 5, 0.7},
+      {9, -1, -35, 31},
+      {389, 3981, 1, 1},
+      {19, -0.9, 0.35, 1000}
+    };
+  matrix_t *A = makeMatrixFrom2DArray((double *)a, 4, 4);
+  lu_t *LU = computeLU(A);
+  printMatrix(A, "Test: LU Decomposition: computeLU(A) -> A=");
+  printMatrix(LU->l, "Test: LU Decomposition: computeLU(A) -> LU->l=");
+  printMatrix(LU->u, "Test: LU Decomposition: computeLU(A) -> LU->u=");
+  destroyMatrix(A);
+  destroyLU(LU);
   return;
 }
