@@ -1,5 +1,4 @@
 #include "../include/matrix.h"
-#include <stdio.h>
 
 matrix_t *zeros(const uint m, uint n) {
   if (m <= 0 || n <= 0)
@@ -322,28 +321,170 @@ matrix_t *add(matrix_t *A, matrix_t *B) {
   return linearCombination(A, B, 1, 1);
 }
 
-matrix_t *createIdentityMatrix(const uint m){
-  if(m < 1){
-    printf("Error: createIdentityMatrix(): Matrix size cannot be less than 1. Exiting..");
+matrix_t *createIdentityMatrix(const uint m) {
+  if (m < 1) {
+    printf("Error: createIdentityMatrix(): Matrix size cannot be less than 1. "
+           "Exiting..");
     exit(1);
   }
   matrix_t *mat = zeros(m, m);
-  for(uint i = 0; i < m; ++i){
+  for (uint i = 0; i < m; ++i) {
     mat->M[i][i] = 1;
   }
   return mat;
 }
 
-matrix_t *copyMatrix(const matrix_t *mat){
-  if(mat->m < 1 || mat->n < 1){
+matrix_t *copyMatrix(const matrix_t *mat) {
+  if (mat->m < 1 || mat->n < 1) {
     printf("Error: copyMatrix(): Matrix size cannot be less than 1. Exiting..");
     exit(1);
   }
   matrix_t *newMat = zeros(mat->m, mat->n);
-  for(uint i = 0; i < mat->m; ++i){
-    for(uint j = 0; j < mat->n; ++j){
+  for (uint i = 0; i < mat->m; ++i) {
+    for (uint j = 0; j < mat->n; ++j) {
       newMat->M[i][j] = mat->M[i][j];
     }
   }
   return newMat;
+}
+
+matrix_t *stringToMatrix(char *str) {
+  uint n = strlen(str);
+
+  if (n < 1) {
+    printf("Error: stringToMatrix(): Minimum string size criterion failed.\n");
+    return NULL;
+  }
+
+  uint numColumns = 0;
+  uint columnIdx = 0;
+  uint numRows = 0;
+  uint dotCount = 0;
+  uint isNum = 0;
+
+  if (n == 1) {
+    if (str[0] >= '0' && str[0] <= '9') {
+      matrix_t *mat = zeros(1, 1);
+      char dig = str[0];
+      mat->M[0][0] = atof(&dig);
+      return mat;
+    }
+    printf("Error: stringToMatrix(): Invalid first element.\n");
+    return NULL;
+  }
+
+  for (uint i = 0; i <= n - 1; ++i) {
+    if (str[i] < '0' || str[i] > '9') {
+      if (!(str[i] == '\t' || str[i] == '.' || str[i] == '-' || str[i] == ',' ||
+            str[i] == ' ')) {
+        printf("Error: stringToMatrix(): Unrecognized character \'%c\' "
+               "encountered.\n",
+               str[i]);
+        return NULL;
+      }
+    }
+
+    if (str[i] == '-') {
+      if ((i == 0 && !isdigit(str[i + 1])) || (i == n - 1)) {
+        printf(
+            "Error: stringToMatrix(): \'-\' should be succeeded by a digit.\n");
+        return NULL;
+      }
+      if (i != 0) {
+        if (isdigit(str[i - 1])) {
+          printf("Error: stringToMatrix(): \'-\' shouldn't be preceded by a "
+                 "digit.\n");
+          return NULL;
+        }
+      }
+      if (!isdigit(str[i + 1])) {
+        printf(
+            "Error: stringToMatrix(): \'-\' should be succeeded by a digit.\n");
+        return NULL;
+      }
+      isNum = 1;
+      dotCount = 0;
+      ++columnIdx;
+    }
+
+    else if (str[i] == '.') {
+      if (dotCount > 0) {
+        printf("Error: stringToMatrix(): There cannot be multiple \'.\' in a "
+               "number.\n");
+        return NULL;
+      }
+
+      if (i == 0 || i == n - 1) {
+        printf("Error: stringToMatrix(): \'.\' should be succeeded and "
+               "preceded by a digit.\n");
+        return NULL;
+      }
+
+      if (!isdigit(str[i - 1]) || !isdigit(str[i + 1])) {
+        printf("Error: stringToMatrix(): \'.\' should be succeeded and "
+               "preceded by a digit.\n");
+        return NULL;
+      }
+
+      ++dotCount;
+    }
+
+    else if (str[i] == ',') {
+      if (numColumns == 0) {
+        numColumns = columnIdx;
+      }
+      if (columnIdx != numColumns) {
+        printf("Error: stringToMatrix(): Column number mismatch.\n");
+        return NULL;
+      }
+      columnIdx = 0;
+      ++numRows;
+      isNum = 0;
+      dotCount = 0;
+    }
+
+    else if (isdigit(str[i])) {
+      if (!isNum) {
+        isNum = 1;
+        dotCount = 0;
+        ++columnIdx;
+      }
+    } else {
+      isNum = 0;
+      dotCount = 0;
+    }
+  }
+
+  numColumns = (numColumns) ? numColumns : 1;
+  numRows = (numRows) ? numRows : 1;
+
+  matrix_t *mat = zeros(numRows, numColumns);
+  isNum = 0;
+  columnIdx = 0;
+  for (uint k = 0, i = 0, j = 0; k < n && i < mat->m && j < mat->n; ++k) {
+    if (str[k] == '-' || (!isNum && isdigit(str[k]))) {
+      isNum = 1;
+      ++columnIdx;
+      char tempNum[50];
+      uint kk = 0;
+      while ((str[k] >= '0' && str[k] <= '9') || (str[k] == '.') ||
+             (str[k] == '-')) {
+        tempNum[kk] = str[k];
+        ++k;
+        ++kk;
+      }
+      tempNum[kk] = '\0';
+      mat->M[i][j] = atof(tempNum);
+      ++j;
+    }
+    if (str[k] == ',') {
+      ++i;
+      j = 0;
+      isNum = 0;
+    }
+    if (isNum) {
+      isNum = 0;
+    }
+  }
+  return mat;
 }

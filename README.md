@@ -3,7 +3,11 @@
 
 To check it out, clone the repo, navigate to the repo, run `make` to build the test program. Then run `./test_matrix`.
 
+### Features:
+
 * Common matrix operations
+* String to matrix
 * QR factorization
 * Least Squares
 * LU decomposition (TODO: partial pivoting)
+* Moore-Penrose pseudoinverse

@@ -1,8 +1,11 @@
 #ifndef __MATRIX_H_
 #define __MATRIX_H_
+
+#include <ctype.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "../include/utils.h"
@@ -39,5 +42,6 @@ matrix_t *inverse(const matrix_t *);
 matrix_t *pseudoInverse(matrix_t *);
 matrix_t *createIdentityMatrix(const uint);
 matrix_t *copyMatrix(const matrix_t *);
+matrix_t *stringToMatrix(char *);
 
 #endif

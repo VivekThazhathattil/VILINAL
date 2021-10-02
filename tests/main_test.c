@@ -3,23 +3,30 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "../include/lu.h"
 #include "../include/matrix.h"
 #include "../include/matrix_classify.h"
 #include "../include/qr.h"
-#include "../include/lu.h"
 #include "../include/utils.h"
 
 void printMatrix(matrix_t *, char *msg);
 void matrix_test(void);
 void leastSquares_test(void);
+void matrix_classify_test_helper(const double *, const uint, const uint,
+                                 const uint, const uint, const uint, const uint,
+                                 const uint);
 void matrix_classify_test(void);
 void computeLU_test(void);
+void stringToMatrix_test(void);
+void stringToMatrix_test_helper(const double *, const uint, const uint, char *,
+                                char *);
 
 int main() {
   srand(time(0));
   matrix_test();
   leastSquares_test();
   computeLU_test();
+  stringToMatrix_test();
   matrix_classify_test();
   return 0;
 }
@@ -130,62 +137,43 @@ void matrix_test(void) {
   return;
 }
 
+void matrix_classify_test_helper(const double *d, const uint m, const uint n,
+                                 const uint sqCond, const uint symCond,
+                                 const uint diagCond, const uint zerCond,
+                                 const uint idCond) {
+  matrix_t *D = makeMatrixFrom2DArray((double *)d, m, n);
+  assert(isSquareMatrix(D) == sqCond);
+  assert(isSymmetricMatrix(D) == symCond);
+  assert(isDiagonalMatrix(D) == diagCond);
+  assert(isZeroMatrix(D) == zerCond);
+  assert(isIdentityMatrix(D) == idCond);
+  destroyMatrix(D);
+  return;
+}
+
 void matrix_classify_test(void) {
+  double i[][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
   double d[][3] = {{3, 0, 0}, {0, 11, 0}, {0, 0, 13}};
   double s[][4] = {{5, 0, 0, 1}, {0, 1, 0, 2}, {0, 0, 13, 5}};
   double z[][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
-  matrix_t *I, *D, *S, *Z;
-
-  I = createIdentityMatrix(5);
-  D = makeMatrixFrom2DArray((double *)d, 3, 3);
-  Z = makeMatrixFrom2DArray((double *)z, 3, 3);
-  S = makeMatrixFrom2DArray((double *)s, 3, 4);
-
-  assert(isSquareMatrix(I));
-  assert(isSquareMatrix(D));
-  assert(isSquareMatrix(Z));
-  assert(!isSquareMatrix(S));
-
-  assert(isSymmetricMatrix(I));
-  assert(isSymmetricMatrix(D));
-  assert(isSymmetricMatrix(Z));
-  assert(!isSymmetricMatrix(S));
-
-  assert(isDiagonalMatrix(I));
-  assert(isDiagonalMatrix(D));
-  assert(isDiagonalMatrix(Z));
-  assert(!isDiagonalMatrix(S));
-
-  assert(!isZeroMatrix(I));
-  assert(!isZeroMatrix(D));
-  assert(!isZeroMatrix(S));
-  assert(isZeroMatrix(Z));
-
-  assert(isIdentityMatrix(I));
-  assert(!isIdentityMatrix(D));
-  assert(!isIdentityMatrix(S));
-  assert(!isIdentityMatrix(Z));
+  matrix_classify_test_helper((double *)i, 3, 3, 1, 1, 1, 0, 1);
+  matrix_classify_test_helper((double *)d, 3, 3, 1, 1, 1, 0, 0);
+  matrix_classify_test_helper((double *)s, 4, 3, 0, 0, 0, 0, 0);
+  matrix_classify_test_helper((double *)z, 3, 3, 1, 1, 1, 1, 0);
 
   printf("----------------------------------------\n");
   printf("Matrix classification checks successful!\n");
-  printf("----------------------------------------\n");
-
-  destroyMatrix(I);
-  destroyMatrix(D);
-  destroyMatrix(S);
-  destroyMatrix(Z);
+  printf("========================================\n");
 
   return;
 }
 
-void computeLU_test(void){
-  double a[][4] = {
-      {1, 3, 5, 0.7},
-      {9, -1, -35, 31},
-      {389, 3981, 1, 1},
-      {19, -0.9, 0.35, 1000}
-    };
+void computeLU_test(void) {
+  double a[][4] = {{1, 3, 5, 0.7},
+                   {9, -1, -35, 31},
+                   {389, 3981, 1, 1},
+                   {19, -0.9, 0.35, 1000}};
   matrix_t *A = makeMatrixFrom2DArray((double *)a, 4, 4);
   lu_t *LU = computeLU(A);
   printMatrix(A, "Test: LU Decomposition: computeLU(A) -> A=");
@@ -193,5 +181,53 @@ void computeLU_test(void){
   printMatrix(LU->u, "Test: LU Decomposition: computeLU(A) -> LU->u=");
   destroyMatrix(A);
   destroyLU(LU);
+  return;
+}
+
+void stringToMatrix_test_helper(const double *a, const uint m, const uint n,
+                                char *strA, char *msg) {
+  matrix_t *A = makeMatrixFrom2DArray((double *)a, m, n);
+  matrix_t *AFromStr = stringToMatrix(strA);
+  printMatrix(AFromStr, msg);
+  assert(compareMatrices(A, AFromStr));
+  destroyMatrix(A);
+  destroyMatrix(AFromStr);
+  return;
+}
+
+void stringToMatrix_test(void) {
+  double a[][5] = {
+      {31.5, 1, -1, 0, 0}, {0.0005, -1000, -3, 23, 0.95}, {0, 0, -0.5, 11, 23}};
+  double b[][1] = {{-5.302}};
+  double c[][2] = {{-5.302, 0.3}};
+  double d[][1] = {{-5.302}, {0.3}};
+
+  char *strA = "31.5     1       -1    0     0,"
+               "0.0005   -1000   -3    23    0.95,"
+               "0        0       -0.5  11    23,";
+  char *strB = "-5.302,";
+  char *strC = "-5.302 0.3,";
+  char *strD = "-5.302,"
+               "0.3,";
+
+  stringToMatrix_test_helper((double *)a, 3, 5, strA,
+                             "Test: stringToMatrix(): AFromStr:");
+  stringToMatrix_test_helper((double *)b, 1, 1, strB,
+                             "Test: stringToMatrix(): BFromStr:");
+  stringToMatrix_test_helper((double *)c, 1, 2, strC,
+                             "Test: stringToMatrix(): CFromStr:");
+  stringToMatrix_test_helper((double *)d, 2, 1, strD,
+                             "Test: stringToMatrix(): DFromStr:");
+
+  assert(stringToMatrix("") == NULL);
+  assert(stringToMatrix("1 2.3.3") == NULL);
+  assert(stringToMatrix("-") == NULL);
+  assert(stringToMatrix("1 3 5 -") == NULL);
+  assert(stringToMatrix("1 3 5 --3") == NULL);
+
+  printf("----------------------------------------\n");
+  printf("stringToMatrix() checks successful!\n");
+  printf("========================================\n");
+
   return;
 }
