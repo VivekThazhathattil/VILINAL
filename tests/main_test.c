@@ -20,6 +20,7 @@ void computeLU_test(void);
 void stringToMatrix_test(void);
 void stringToMatrix_test_helper(const double *, const uint, const uint, char *,
                                 char *);
+void test_gramMatrix(void);
 
 int main() {
   srand(time(0));
@@ -28,6 +29,7 @@ int main() {
   computeLU_test();
   stringToMatrix_test();
   matrix_classify_test();
+  test_gramMatrix();
   return 0;
 }
 
@@ -220,14 +222,30 @@ void stringToMatrix_test(void) {
                              "Test: stringToMatrix(): DFromStr:");
 
   assert(stringToMatrix("") == NULL);
-  assert(stringToMatrix("1 2.3.3") == NULL);
-  assert(stringToMatrix("-") == NULL);
-  assert(stringToMatrix("1 3 5 -") == NULL);
-  assert(stringToMatrix("1 3 5 --3") == NULL);
+  assert(stringToMatrix("1 2.3.3,") == NULL);
+  assert(stringToMatrix("-,") == NULL);
+  assert(stringToMatrix("1 3 5 -,") == NULL);
+  assert(stringToMatrix("1 3 5 --3,") == NULL);
 
   printf("----------------------------------------\n");
   printf("stringToMatrix() checks successful!\n");
   printf("========================================\n");
+
+  return;
+}
+
+void test_gramMatrix(void) {
+  char *strA = "0.5     1       -1    0     0,"
+               "1.0   -1000     -3    23    0.95,";
+  matrix_t *mat, *gramMat;
+
+  mat = stringToMatrix(strA);
+  gramMat = gramMatrix(mat);
+  printMatrix(mat, "Test: gramMatrix(): in:");
+  printMatrix(gramMat, "Test: gramMatrix(): out:");
+
+  destroyMatrix(mat);
+  destroyMatrix(gramMat);
 
   return;
 }

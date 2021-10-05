@@ -43,5 +43,6 @@ matrix_t *pseudoInverse(matrix_t *);
 matrix_t *createIdentityMatrix(const uint);
 matrix_t *copyMatrix(const matrix_t *);
 matrix_t *stringToMatrix(char *);
+matrix_t *gramMatrix(matrix_t *);
 
 #endif

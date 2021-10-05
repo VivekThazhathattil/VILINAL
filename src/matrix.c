@@ -26,7 +26,7 @@ matrix_t *zeros(const uint m, uint n) {
   return mat;
 }
 
-/* collapse the two funcitons below into a single one */
+/* collapse the two functions below into a single one */
 void freePartiallyFilledMatrix(matrix_t *mat, uint failedIdx) {
   for (uint i = 0; i < failedIdx; ++i) {
     if (mat->M[i] != NULL)
@@ -487,4 +487,16 @@ matrix_t *stringToMatrix(char *str) {
     }
   }
   return mat;
+}
+
+matrix_t *gramMatrix(matrix_t *mat) {
+  if (mat->m < 1 || mat->n < 1) {
+    printf("Error: gramMatrix(): invalid dimensions for input matrix \n");
+    exit(1);
+  }
+  matrix_t *gramMat, *transMat;
+  transMat = transpose(mat);
+  gramMat = product(transMat, mat);
+  destroyMatrix(transMat);
+  return gramMat;
 }

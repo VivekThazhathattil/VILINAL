@@ -11,3 +11,4 @@ To check it out, clone the repo, navigate to the repo, run `make` to build the t
 * Least Squares
 * LU decomposition (TODO: partial pivoting)
 * Moore-Penrose pseudoinverse
+* Gram matrix
