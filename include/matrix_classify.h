@@ -10,6 +10,9 @@ uint isSymmetricMatrix(matrix_t *);
 uint isZeroMatrix(matrix_t *);
 uint isIdentityMatrix(matrix_t *);
 uint isOrthogonalMatrix(matrix_t *);
+uint isUpperTriangular(matrix_t *);
+uint isLowerTriangular(matrix_t *);
+uint isTriangular(matrix_t *);
 uint compareMatrices(matrix_t *, matrix_t *);
 
 #endif

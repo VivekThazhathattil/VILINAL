@@ -63,24 +63,68 @@ uint isIdentityMatrix(matrix_t *mat) {
   return 1;
 }
 
-uint isOrthogonalMatrix(matrix_t *mat){
+uint isOrthogonalMatrix(matrix_t *mat) {
   uint res = 0;
-  if(!isSquareMatrix(mat)){
+  if (!isSquareMatrix(mat)) {
     return res;
   }
 
-  matrix_t *transMat, *prodLeft, *prodRight;
+  matrix_t *transMat, *prodLeft, *prodRight, *invMat;
   transMat = transpose(mat);
   prodLeft = product(transMat, mat);
   prodRight = product(mat, transMat);
-  if(isIdentityMatrix(prodLeft) && isIdentityMatrix(prodRight)){
+  invMat = NULL;
+
+  if (isIdentityMatrix(prodLeft) && isIdentityMatrix(prodRight)) {
     res = 1;
+  }
+
+  if (determinant(mat) == 0) {
+    res = 0;
+  }
+
+  else {
+    invMat = inverse(mat);
+    if (!compareMatrices(invMat, transMat)) {
+      res = 0;
+    }
   }
 
   destroyMatrix(transMat);
   destroyMatrix(prodLeft);
   destroyMatrix(prodRight);
+  if (invMat != NULL) {
+    destroyMatrix(invMat);
+  }
   return res;
+}
+
+static uint triangularHelper(matrix_t *mat, uint checkDirection) {
+  for (uint i = 0; i < mat->m; ++i) {
+    for (uint j = 0; j < mat->n; ++j) {
+      if (checkDirection) {
+        if (i < j && mat->M[i][j] != 0) {
+          return 0;
+        }
+      } else {
+        if (i > j && mat->M[i][j] != 0) {
+          return 0;
+        }
+      }
+    }
+  }
+  return 1;
+}
+
+uint isUpperTriangular(matrix_t *mat) { return triangularHelper(mat, 0); }
+
+uint isLowerTriangular(matrix_t *mat) { return triangularHelper(mat, 1); }
+
+uint isTriangular(matrix_t *mat) {
+  if (isUpperTriangular(mat) || isLowerTriangular(mat)) {
+    return 1;
+  }
+  return 0;
 }
 
 uint compareMatrices(matrix_t *mat1, matrix_t *mat2) {
