@@ -63,6 +63,26 @@ uint isIdentityMatrix(matrix_t *mat) {
   return 1;
 }
 
+uint isOrthogonalMatrix(matrix_t *mat){
+  uint res = 0;
+  if(!isSquareMatrix(mat)){
+    return res;
+  }
+
+  matrix_t *transMat, *prodLeft, *prodRight;
+  transMat = transpose(mat);
+  prodLeft = product(transMat, mat);
+  prodRight = product(mat, transMat);
+  if(isIdentityMatrix(prodLeft) && isIdentityMatrix(prodRight)){
+    res = 1;
+  }
+
+  destroyMatrix(transMat);
+  destroyMatrix(prodLeft);
+  destroyMatrix(prodRight);
+  return res;
+}
+
 uint compareMatrices(matrix_t *mat1, matrix_t *mat2) {
   if (mat1->m != mat2->m || mat1->n != mat2->n) {
     return 0;

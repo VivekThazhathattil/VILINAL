@@ -14,7 +14,7 @@ void matrix_test(void);
 void leastSquares_test(void);
 void matrix_classify_test_helper(const double *, const uint, const uint,
                                  const uint, const uint, const uint, const uint,
-                                 const uint);
+                                 const uint, const uint);
 void matrix_classify_test(void);
 void computeLU_test(void);
 void stringToMatrix_test(void);
@@ -142,13 +142,14 @@ void matrix_test(void) {
 void matrix_classify_test_helper(const double *d, const uint m, const uint n,
                                  const uint sqCond, const uint symCond,
                                  const uint diagCond, const uint zerCond,
-                                 const uint idCond) {
+                                 const uint idCond, const uint orthoCond) {
   matrix_t *D = makeMatrixFrom2DArray((double *)d, m, n);
   assert(isSquareMatrix(D) == sqCond);
   assert(isSymmetricMatrix(D) == symCond);
   assert(isDiagonalMatrix(D) == diagCond);
   assert(isZeroMatrix(D) == zerCond);
   assert(isIdentityMatrix(D) == idCond);
+  assert(isOrthogonalMatrix(D) == orthoCond);
   destroyMatrix(D);
   return;
 }
@@ -159,10 +160,10 @@ void matrix_classify_test(void) {
   double s[][4] = {{5, 0, 0, 1}, {0, 1, 0, 2}, {0, 0, 13, 5}};
   double z[][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
-  matrix_classify_test_helper((double *)i, 3, 3, 1, 1, 1, 0, 1);
-  matrix_classify_test_helper((double *)d, 3, 3, 1, 1, 1, 0, 0);
-  matrix_classify_test_helper((double *)s, 4, 3, 0, 0, 0, 0, 0);
-  matrix_classify_test_helper((double *)z, 3, 3, 1, 1, 1, 1, 0);
+  matrix_classify_test_helper((double *)i, 3, 3, 1, 1, 1, 0, 1, 1);
+  matrix_classify_test_helper((double *)d, 3, 3, 1, 1, 1, 0, 0, 0);
+  matrix_classify_test_helper((double *)s, 4, 3, 0, 0, 0, 0, 0, 0);
+  matrix_classify_test_helper((double *)z, 3, 3, 1, 1, 1, 1, 0, 0);
 
   printf("----------------------------------------\n");
   printf("Matrix classification checks successful!\n");

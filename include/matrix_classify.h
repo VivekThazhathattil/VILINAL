@@ -9,6 +9,7 @@ uint isDiagonalMatrix(matrix_t *);
 uint isSymmetricMatrix(matrix_t *);
 uint isZeroMatrix(matrix_t *);
 uint isIdentityMatrix(matrix_t *);
+uint isOrthogonalMatrix(matrix_t *);
 uint compareMatrices(matrix_t *, matrix_t *);
 
 #endif
