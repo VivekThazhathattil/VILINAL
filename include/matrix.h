@@ -31,6 +31,8 @@ matrix_t *add(matrix_t *, matrix_t *);
 matrix_t *subtract(matrix_t *, matrix_t *);
 matrix_t *linearCombination(matrix_t *, matrix_t *, double, double);
 
+double one_norm(matrix_t *);
+double inf_norm(matrix_t *);
 double two_norm(matrix_t *, uint);
 
 void resetToZero(matrix_t *);

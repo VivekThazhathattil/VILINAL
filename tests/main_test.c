@@ -22,6 +22,7 @@ void stringToMatrix_test(void);
 void stringToMatrix_test_helper(const double *, const uint, const uint, char *,
                                 char *);
 void test_gramMatrix(void);
+void norms_test(matrix_t*, matrix_t*);
 
 int main() {
   srand(time(0));
@@ -120,6 +121,8 @@ void matrix_test(void) {
   printMatrix(
       G,
       "Test #8b: pseudoInverse(E) -> should equal (E^T E)^(-1) * E^T = E^(-1)");
+
+  norms_test(A, B);
 
   destroyMatrix(A);
   destroyMatrix(B);
@@ -260,5 +263,25 @@ void test_gramMatrix(void) {
   destroyMatrix(mat);
   destroyMatrix(gramMat);
 
+  return;
+}
+
+void norms_test(matrix_t* A, matrix_t* B){
+  printf("Test for norms:\n");
+  printf("----------------------------------------\n");
+
+  printMatrix(A, "Test: one-norm, inf-norm in: A");
+  printf("%f\n", one_norm(A));
+  printf("%f\n", inf_norm(A));
+  
+  printMatrix(B, "Test: one-norm, inf-norm in: B");
+  printf("%f\n", one_norm(B));
+  printf("%f\n", inf_norm(B));
+
+  assert(one_norm(A) == 15.);
+  assert(one_norm(B) == 41.);
+  assert(inf_norm(A) == 40.);
+  assert(inf_norm(B) == 37.);
+  printf("========================================\n");
   return;
 }
