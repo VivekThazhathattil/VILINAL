@@ -181,18 +181,14 @@ double two_norm(matrix_t *A, uint colIdx)
 double one_norm(matrix_t *A)
 {
   if (A->m == 1 && A->n == 1)
-  {
     return A->M[0][0];
-  }
 
   double maxColSum = 0.;
   for (uint j = 0; j < A->n; ++j)
   {
     double currColSum = 0;
     for (uint i = 0; i < A->m; ++i)
-    {
       currColSum += fabs(A->M[i][j]);
-    }
     if (currColSum > maxColSum)
       maxColSum = currColSum;
   }
@@ -203,22 +199,27 @@ double one_norm(matrix_t *A)
 double inf_norm(matrix_t *A)
 {
   if (A->m == 1 && A->n == 1)
-  {
     return A->M[0][0];
-  }
 
   double maxRowSum = 0.;
   for (uint i = 0; i < A->m; ++i)
   {
     double currRowSum = 0;
     for (uint j = 0; j < A->n; ++j)
-    {
       currRowSum += fabs(A->M[i][j]);
-    }
     if (currRowSum > maxRowSum)
       maxRowSum = currRowSum;
   }
   return maxRowSum;
+}
+
+// frobenius-norm 
+double frobenius_norm(matrix_t *A){
+  double frNorm = 0.;
+  for(uint i = 0; i < A->m; ++i)
+    for(uint j = 0; j < A->n; ++j)
+      frNorm += pow(A->M[i][j], 2);
+  return sqrt(frNorm);
 }
 
 void resetToZero(matrix_t *A)

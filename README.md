@@ -12,3 +12,4 @@ To check it out, clone the repo, navigate to the repo, run `make` to build the t
 * LU decomposition (TODO: partial pivoting)
 * Moore-Penrose pseudoinverse
 * Gram matrix
+* Norms: 1-norm, inf-norm, frobenius-norm

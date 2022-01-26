@@ -271,17 +271,24 @@ void norms_test(matrix_t* A, matrix_t* B){
   printf("----------------------------------------\n");
 
   printMatrix(A, "Test: one-norm, inf-norm in: A");
-  printf("%f\n", one_norm(A));
-  printf("%f\n", inf_norm(A));
+  printf("One-norm(A): %f\n", one_norm(A));
+  printf("Inf-norm(A): %f\n", inf_norm(A));
+  printf("Frobenius-norm(A): %f\n", frobenius_norm(A));
   
   printMatrix(B, "Test: one-norm, inf-norm in: B");
-  printf("%f\n", one_norm(B));
-  printf("%f\n", inf_norm(B));
+  printf("One-norm(B): %f\n", one_norm(B));
+  printf("Inf-norm(B): %f\n", inf_norm(B));
+  printf("Frobenius-norm(B): %f\n", frobenius_norm(B));
 
   assert(one_norm(A) == 15.);
   assert(one_norm(B) == 41.);
+
   assert(inf_norm(A) == 40.);
   assert(inf_norm(B) == 37.);
+  
+  assert(pow(frobenius_norm(A), 2) >= 384 && pow(frobenius_norm(A), 2) <= 386);
+  assert(pow(frobenius_norm(B), 2) >= 1272 && pow(frobenius_norm(B), 2) <= 1274);
+
   printf("========================================\n");
   return;
 }
